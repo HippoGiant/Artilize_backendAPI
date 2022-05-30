@@ -8,10 +8,18 @@ const db = require('../../modules/mysql_config');
 
 router.route('/')
 .get(async(req,res,next)=>{
-    const sql = "SELECT * FROM product_main"
+    const sql = "SELECT * FROM product_main LEFT JOIN product_brand ON product_main.product_id = product_brand.product_brand_id"
     const [datas] = await db.query(sql)
     res.json(datas)
+    console.log(datas)
 })
+
+// .get(async(req,res,next)=>{
+//     const brandSql = "SELECT * FROM product_brand"
+//     const [brandDatas] = await  db.query(brandSql)
+//     res.json(brandDatas)
+//     console.log(brandDatas)
+// })
 
 // router.get('/',function(req,res,next){
 //     db.query(
