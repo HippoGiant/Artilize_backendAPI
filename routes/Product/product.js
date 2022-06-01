@@ -6,11 +6,23 @@ const db = require('../../modules/mysql_config');
 //     res.send('PRODUCT');
 // });
 
-router.route('/')
-.get(async(req,res,next)=>{
+router.get('/',async(req,res,next)=>{
     console.log(req);
     const sql = "SELECT * FROM product_main LEFT JOIN product_brand ON product_main.product_id = product_brand.product_brand_id"
     const [datas] = await db.query(sql)
+    res.json(datas)
+    // console.log(datas)
+})
+
+
+router.get('/introduce/:id', async(req,res,next)=>{
+    const id = req.params.id
+    console.log(id);
+    // const getId = url.parse(req.url).query
+    // console.log(getId)
+    // res.json(1)
+    const sql = "SELECT * FROM product_main WHERE product_id=?"
+    const [datas] = await db.query(sql,[id])
     res.json(datas)
     // console.log(datas)
 })
