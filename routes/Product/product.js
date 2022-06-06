@@ -8,21 +8,49 @@ const db = require('../../modules/mysql_config');
 
 router.get('/',async(req,res,next)=>{
     console.log(req);
-    const sql = "SELECT * FROM product_main LEFT JOIN product_brand ON product_main.product_id = product_brand.product_brand_id"
+    const sql = "SELECT * FROM product_main"
+    const [datas] = await db.query(sql)
+    res.json(datas)
+    // console.log(datas)
+})
+router.get('/brand',async(req,res,next)=>{
+    console.log(req);
+    
+    const sql = "SELECT * FROM product_brand"
     const [datas] = await db.query(sql)
     res.json(datas)
     // console.log(datas)
 })
 
 
-router.get('/introduce/:id', async(req,res,next)=>{
-    const id = req.params.id
-    console.log(id);
+
+
+router.route('/introduce/:id')
+    .get(async(req,res,next)=>{
+        const id = req.params.id
+        // console.log(id);
+        // const getId = url.parse(req.url).query
+        // console.log(getId)
+        // res.json(1)
+        const sql = "SELECT * FROM product_main WHERE product_id=?"
+        const [datas] = await db.query(sql,[id])
+        res.json(datas)
+        // console.log(datas)
+    })
+    .put(async(req,res)=>{
+        const id = req.params.id
+        const sql = "UPDATE product_main SET product_like=? WHERE product_id=?"
+        const [datas] = await db.query(sql,[req.body.producyLike, id])
+    })
+
+router.get('/category/:categoryDetail', async(req,res,next)=>{
+    const categoryDetail = req.params.categoryDetail
+    // console.log(categoryDetail);
     // const getId = url.parse(req.url).query
     // console.log(getId)
     // res.json(1)
-    const sql = "SELECT * FROM product_main WHERE product_id=?"
-    const [datas] = await db.query(sql,[id])
+    const sql = "SELECT * FROM product_main WHERE product_category_detail=?"
+    const [datas] = await db.query(sql,[categoryDetail])
     res.json(datas)
     // console.log(datas)
 })
