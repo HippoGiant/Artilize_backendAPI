@@ -37,10 +37,12 @@ router.route('/introduce/:id')
         res.json(datas)
         // console.log(datas)
     })
-    .put(async(req,res)=>{
+    .put(async(req,res,)=>{
         const id = req.params.id
         const sql = "UPDATE product_main SET product_like=? WHERE product_id=?"
-        const [datas] = await db.query(sql,[req.body.producyLike, id])
+        const [datas] = await db.query(sql,[req.body.setLike, id])
+        res.json(datas)
+        console.log(datas)
     })
 
 router.get('/category/:categoryDetail', async(req,res,next)=>{
