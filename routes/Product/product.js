@@ -15,12 +15,46 @@ router.get('/',async(req,res,next)=>{
 })
 router.get('/brand',async(req,res,next)=>{
     console.log(req);
-    
     const sql = "SELECT * FROM product_brand"
     const [datas] = await db.query(sql)
     res.json(datas)
     // console.log(datas)
 })
+router.get('/introduce/like',async(req,res)=>{
+    let output ={
+        ok:false
+    }
+    const{userId,productId} = req.query   
+        console.log(userId);
+        console.log(productId);
+        const sql = "SELECT count(*) as totallike FROM product_like WHERE fkUserId=? and fkProductId=?"
+        const [liketotaldatas] = await db.query(sql,[userId,productId])
+        const totaldatas = liketotaldatas[0].totallike
+        
+        // console.log(liketotaldatas);
+        console.log(totaldatas);
+
+        if(totaldatas >= 1){
+            const sqlDelete = "DELETE FROM product_like WHERE fkUserID=? and fkProductId=? "
+           const [deletedatas] = await db.query(sqlDelete,[userId,productId])
+           if(deletedatas.affectRows ===1){
+               output.ok = true
+           }
+           res.json(output)
+        }else{
+            const sqlInsert = "INSERT INTO product_like(fkUserId,fkProductId) VALUES (?,?) "
+            const [datas] = await db.query(sqlInsert,[userId,productId])
+            console.log(datas);
+            if(datas.affectedRows ===1){
+                output.ok = true;
+            }
+            res.json(output);
+        }
+        
+        
+        
+        // res.json(output)
+    })
 
 
 
@@ -37,13 +71,9 @@ router.route('/introduce/:id')
         res.json(datas)
         // console.log(datas)
     })
-    .put(async(req,res,)=>{
-        const id = req.params.id
-        const sql = "UPDATE product_main SET product_like=? WHERE product_id=?"
-        const [datas] = await db.query(sql,[req.body.setLike, id])
-        res.json(datas)
-        console.log(datas)
-    })
+    
+
+
 
 router.get('/category/:categoryDetail', async(req,res,next)=>{
     const categoryDetail = req.params.categoryDetail
