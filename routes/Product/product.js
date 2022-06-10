@@ -20,6 +20,14 @@ router.get('/brand',async(req,res,next)=>{
     res.json(datas)
     // console.log(datas)
 })
+
+router.get('/introduce/carousel',async(req,res)=>{
+    const sql = "SELECT ImgName FROM product_main RIGHT JOIN product_introimages ON product_main.product_id = product_introimages.fkProductId"
+    const [datas] = await db.query(sql)
+    res.json(datas)
+    console.log(datas)
+})
+
 router.get('/introduce/like',async(req,res)=>{
     let output ={
         ok:false
@@ -30,8 +38,8 @@ router.get('/introduce/like',async(req,res)=>{
         const sql = "SELECT count(*) as totallike FROM product_like WHERE fkUserId=? and fkProductId=?"
         const [liketotaldatas] = await db.query(sql,[userId,productId])
         const totaldatas = liketotaldatas[0].totallike
-        
-        // console.log(liketotaldatas);
+
+        console.log(liketotaldatas);
         console.log(totaldatas);
 
         if(totaldatas >= 1){
@@ -49,6 +57,8 @@ router.get('/introduce/like',async(req,res)=>{
                 output.ok = true;
             }
             res.json(output);
+            // res.json(datas)
+            // console.log(datas)
         }
         
         
