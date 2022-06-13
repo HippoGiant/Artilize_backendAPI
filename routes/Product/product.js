@@ -21,11 +21,23 @@ router.get('/brand',async(req,res,next)=>{
     // console.log(datas)
 })
 
-router.get('/introduce/carousel',async(req,res)=>{
-    const sql = "SELECT ImgName FROM product_main RIGHT JOIN product_introimages ON product_main.product_id = product_introimages.fkProductId"
-    const [datas] = await db.query(sql)
+router.get('/introduce/carousel/:id',async(req,res)=>{
+    const id = req.params.id
+    const sql = "SELECT ImgName FROM product_main RIGHT JOIN product_introimages ON product_main.product_id = product_introimages.fkProductId WHERE product_id=?"
+    const [datas] = await db.query(sql,[id])
     res.json(datas)
     console.log(datas)
+})
+
+router.get('/introduce/likeicon',async(req,res)=>{
+    const{userId,productId} = req.query
+    console.log(userId,productId)
+        const sql = "SELECT count(*) as totallike FROM product_like WHERE fkUserId=? and fkProductId=?"
+        const [liketotaldatas] = await db.query(sql,[userId,productId])
+        const totaldatas = liketotaldatas[0].totallike
+        console.log(totaldatas)
+        res.json(totaldatas)
+
 })
 
 router.get('/introduce/like',async(req,res)=>{
